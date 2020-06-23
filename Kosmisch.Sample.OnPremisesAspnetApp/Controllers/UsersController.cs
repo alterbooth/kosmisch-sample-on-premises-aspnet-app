@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Kosmisch.Sample.OnPremisesAspnetApp.Data;
+using Kosmisch.Sample.OnPremisesAspnetApp.Helpers;
 using Kosmisch.Sample.OnPremisesAspnetApp.Models;
 
 namespace Kosmisch.Sample.OnPremisesAspnetApp.Controllers
@@ -49,15 +50,23 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name,Age,ProfileImageName")] User user)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                user.Id = Guid.NewGuid();
-                db.Users.Add(user);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return View(user);
             }
 
-            return View(user);
+            var file = Request.Files["profile"];
+            if (file != null && file.ContentLength > 0)
+            {
+                var path = HttpContext.Server.MapPath("~/temp/");
+                FileHelper.Create(path, file);
+                user.ProfileImageName = file.FileName;
+            }
+
+            user.Id = Guid.NewGuid();
+            db.Users.Add(user);
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         // GET: Users/Edit/5
@@ -82,13 +91,22 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name,Age,ProfileImageName")] User user)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                db.Entry(user).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return View(user);
             }
-            return View(user);
+
+            var file = Request.Files["profile"];
+            if (file != null && file.ContentLength > 0 && file.FileName != user.ProfileImageName)
+            {
+                var path = HttpContext.Server.MapPath("~/temp/");
+                FileHelper.Create(path, file);
+                user.ProfileImageName = file.FileName;
+            }
+
+            db.Entry(user).State = EntityState.Modified;
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         // GET: Users/Delete/5
