@@ -4,8 +4,16 @@ using System.Web;
 
 namespace Kosmisch.Sample.OnPremisesAspnetApp.Helpers
 {
+    /// <summary>
+    /// ファイル操作用ヘルパークラス
+    /// </summary>
     public static class FileHelper
     {
+        /// <summary>
+        /// ファイルをローカルに保存する
+        /// </summary>
+        /// <param name="path">保存先フォルダパス</param>
+        /// <param name="file"><see cref="HttpPostedFileBase"/></param>
         public static void Create(string path, HttpPostedFileBase file)
         {
             Directory.CreateDirectory(path);

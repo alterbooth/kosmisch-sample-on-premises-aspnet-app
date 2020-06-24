@@ -55,6 +55,7 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Controllers
                 return View(user);
             }
 
+            // プロフィール画像をアップロード
             var file = Request.Files["profile"];
             if (file != null && file.ContentLength > 0)
             {
@@ -96,6 +97,7 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Controllers
                 return View(user);
             }
 
+            // プロフィール画像をアップロード
             var file = Request.Files["profile"];
             if (file != null && file.ContentLength > 0 && file.FileName != user.ProfileImageName)
             {
