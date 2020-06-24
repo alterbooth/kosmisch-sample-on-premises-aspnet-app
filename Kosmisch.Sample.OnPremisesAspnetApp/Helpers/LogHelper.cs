@@ -11,11 +11,14 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Helpers
         /// <summary>
         /// ログを書き込む
         /// </summary>
+        /// <param name="path">ログファイルパス</param>
         /// <param name="message">ログメッセージ</param>
-        /// <param name="writer"><see cref="TextWriter"/></param>
-        public static void Write(string message, TextWriter writer)
+        public static void Write(string path, string message)
         {
-            writer.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}:{message}");
+            using (var w = File.AppendText($@"{path}\log.txt"))
+            {
+                w.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}:{message}");
+            }
         }
     }
 }

@@ -28,10 +28,7 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Helpers
             }
             catch (Exception e)
             {
-                using (var w = File.AppendText("log.txt"))
-                {
-                    LogHelper.Write(e.Message, w);
-                }
+                LogHelper.Write(path, e.Message);
             }
             finally
             {

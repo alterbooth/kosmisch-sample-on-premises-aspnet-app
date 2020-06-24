@@ -57,9 +57,9 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Controllers
 
             // プロフィール画像をアップロード
             var file = Request.Files["profile"];
+            var path = HttpContext.Server.MapPath("~/temp/");
             if (file != null && file.ContentLength > 0)
             {
-                var path = HttpContext.Server.MapPath("~/temp/");
                 FileHelper.Create(path, file);
                 user.ProfileImageName = file.FileName;
             }
@@ -67,6 +67,7 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Controllers
             user.Id = Guid.NewGuid();
             db.Users.Add(user);
             db.SaveChanges();
+            LogHelper.Write(path, "User Inserted.");
             return RedirectToAction("Index");
         }
 
@@ -99,15 +100,16 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Controllers
 
             // プロフィール画像をアップロード
             var file = Request.Files["profile"];
+            var path = HttpContext.Server.MapPath("~/temp/");
             if (file != null && file.ContentLength > 0 && file.FileName != user.ProfileImageName)
             {
-                var path = HttpContext.Server.MapPath("~/temp/");
                 FileHelper.Create(path, file);
                 user.ProfileImageName = file.FileName;
             }
 
             db.Entry(user).State = EntityState.Modified;
             db.SaveChanges();
+            LogHelper.Write(path, $"User Updated.|Id={user.Id}");
             return RedirectToAction("Index");
         }
 
@@ -134,6 +136,8 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Controllers
             User user = db.Users.Find(id);
             db.Users.Remove(user);
             db.SaveChanges();
+            var path = HttpContext.Server.MapPath("~/temp/");
+            LogHelper.Write(path, $"User Deleted.|Id={id}");
             return RedirectToAction("Index");
         }
 
