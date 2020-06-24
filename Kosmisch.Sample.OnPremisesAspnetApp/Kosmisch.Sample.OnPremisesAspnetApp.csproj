@@ -129,7 +129,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\EmailHelper.cs" />
     <Compile Include="Helpers\FileHelper.cs" />
+    <Compile Include="Helpers\LogHelper.cs" />
+    <Compile Include="Helpers\RestHelper.cs" />
     <Compile Include="Migrations\202006222225467_Initial.cs" />
     <Compile Include="Migrations\202006222225467_Initial.Designer.cs">
       <DependentUpon>202006222225467_Initial.cs</DependentUpon>
