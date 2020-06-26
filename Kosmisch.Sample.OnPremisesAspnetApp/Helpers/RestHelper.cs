@@ -13,13 +13,9 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Helpers
         /// <returns>レスポンスbody</returns>
         public static string Get()
         {
-            var responseBody = "";
-
-            using (var client = new HttpClient())
-            {
-                var response = client.GetAsync("http://kosmischsample.net/").ConfigureAwait(false).GetAwaiter().GetResult();
-                responseBody = response.Content.ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-            }
+            var client = new HttpClient();
+            var response = client.GetAsync("http://kosmischsample.net/").ConfigureAwait(false).GetAwaiter().GetResult();
+            var responseBody = response.Content.ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
 
             return responseBody;
         }
