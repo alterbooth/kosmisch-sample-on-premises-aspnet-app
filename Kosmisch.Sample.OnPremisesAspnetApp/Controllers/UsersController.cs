@@ -44,8 +44,6 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Controllers
         }
 
         // POST: Users/Create
-        // 過多ポスティング攻撃を防止するには、バインド先とする特定のプロパティを有効にしてください。
-        // 詳細については、https://go.microsoft.com/fwlink/?LinkId=317598 を参照してください。
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name,Age,ProfileImageName")] User user)
@@ -77,8 +75,6 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Controllers
         }
 
         // POST: Users/Edit/5
-        // 過多ポスティング攻撃を防止するには、バインド先とする特定のプロパティを有効にしてください。
-        // 詳細については、https://go.microsoft.com/fwlink/?LinkId=317598 を参照してください。
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name,Age,ProfileImageName")] User user)
