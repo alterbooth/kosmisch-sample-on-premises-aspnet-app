@@ -2,7 +2,6 @@
 
 @{
     ViewBag.Title = "Details";
-    var profileFilePath = @"/temp/" + Model.ProfileImageName;
 }
 
 <h2>Details</h2>
@@ -26,17 +25,6 @@
         <dd>
             @Html.DisplayFor(model => model.Age)
         </dd>
-
-        @if (!string.IsNullOrWhiteSpace(Model.ProfileImageName))
-        {
-            <dt>
-                @Html.DisplayNameFor(model => model.ProfileImageName)
-            </dt>
-
-            <dd>
-                <img src="@profileFilePath" height="80" width="80" />
-            </dd>
-        }
 
     </dl>
 </div>

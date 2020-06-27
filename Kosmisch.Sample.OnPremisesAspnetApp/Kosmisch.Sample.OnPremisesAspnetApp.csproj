@@ -130,12 +130,14 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\EmailHelper.cs" />
-    <Compile Include="Helpers\FileHelper.cs" />
-    <Compile Include="Helpers\LogHelper.cs" />
     <Compile Include="Helpers\RestHelper.cs" />
     <Compile Include="Migrations\202006222225467_Initial.cs" />
     <Compile Include="Migrations\202006222225467_Initial.Designer.cs">
       <DependentUpon>202006222225467_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202006270708315_RemoveProfileImageNameFromUsers.cs" />
+    <Compile Include="Migrations\202006270708315_RemoveProfileImageNameFromUsers.Designer.cs">
+      <DependentUpon>202006270708315_RemoveProfileImageNameFromUsers.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\User.cs" />
@@ -202,6 +204,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202006222225467_Initial.resx">
       <DependentUpon>202006222225467_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202006270708315_RemoveProfileImageNameFromUsers.resx">
+      <DependentUpon>202006270708315_RemoveProfileImageNameFromUsers.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

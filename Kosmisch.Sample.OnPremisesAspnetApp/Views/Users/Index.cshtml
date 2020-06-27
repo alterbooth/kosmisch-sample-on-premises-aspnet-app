@@ -17,9 +17,6 @@
         <th>
             @Html.DisplayNameFor(model => model.Age)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ProfileImageName)
-        </th>
         <th></th>
     </tr>
 
@@ -30,9 +27,6 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Age)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ProfileImageName)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |

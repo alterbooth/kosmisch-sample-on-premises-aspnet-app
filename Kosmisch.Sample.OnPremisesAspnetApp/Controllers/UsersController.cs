@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using Kosmisch.Sample.OnPremisesAspnetApp.Data;
+using Kosmisch.Sample.OnPremisesAspnetApp.Models;
+using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using Kosmisch.Sample.OnPremisesAspnetApp.Data;
-using Kosmisch.Sample.OnPremisesAspnetApp.Helpers;
-using Kosmisch.Sample.OnPremisesAspnetApp.Models;
 
 namespace Kosmisch.Sample.OnPremisesAspnetApp.Controllers
 {
@@ -55,19 +51,9 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Controllers
                 return View(user);
             }
 
-            // プロフィール画像をアップロード
-            var file = Request.Files["profile"];
-            var path = HttpContext.Server.MapPath("~/temp/");
-            if (file != null && file.ContentLength > 0)
-            {
-                FileHelper.Create(path, file);
-                user.ProfileImageName = file.FileName;
-            }
-
             user.Id = Guid.NewGuid();
             db.Users.Add(user);
             db.SaveChanges();
-            LogHelper.Write(path, "User Inserted.");
             return RedirectToAction("Index");
         }
 
@@ -98,18 +84,8 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Controllers
                 return View(user);
             }
 
-            // プロフィール画像をアップロード
-            var file = Request.Files["profile"];
-            var path = HttpContext.Server.MapPath("~/temp/");
-            if (file != null && file.ContentLength > 0 && file.FileName != user.ProfileImageName)
-            {
-                FileHelper.Create(path, file);
-                user.ProfileImageName = file.FileName;
-            }
-
             db.Entry(user).State = EntityState.Modified;
             db.SaveChanges();
-            LogHelper.Write(path, $"User Updated.|Id={user.Id}");
             return RedirectToAction("Index");
         }
 
@@ -136,8 +112,6 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Controllers
             User user = db.Users.Find(id);
             db.Users.Remove(user);
             db.SaveChanges();
-            var path = HttpContext.Server.MapPath("~/temp/");
-            LogHelper.Write(path, $"User Deleted.|Id={id}");
             return RedirectToAction("Index");
         }
 
