@@ -4,10 +4,8 @@ using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Net.Mail;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace Kosmisch.Sample.OnPremisesAspnetApp.Controllers
@@ -129,17 +127,6 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Controllers
             message.SubjectEncoding = Encoding.UTF8;
             client.Send(message);
             message.Dispose();
-
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        public async Task<ActionResult> SendHttpRequestSampleAsync()
-        {
-            // 各種設定値はサンプルのため、実際には動作しません
-            var client = new HttpClient();
-            var response = await client.GetAsync("http://kosmischsample.net/");
-            var responseBody = await response.Content.ReadAsStringAsync();
 
             return RedirectToAction("Index");
         }
