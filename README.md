@@ -1,11 +1,13 @@
 # kosmisch-sample-on-premises-aspnet-app
 ## 概要
-Windows Server で実行している ASP.NET アプリケーション を、 Microsoft Azure の PaaS (Platform as a Service) 環境で実行する ASP.NET Core アプリケーション に移行するサンプルです。
+例えば、あなたは情報システム部に所属していて、社内システムを運用しているとします。
+その社内システムは ASP.NET のアプリケーションで、実行環境にWindows Server 2008 RCを使っています。
+そこで、サポート終了やメンテナンス性の向上も考え、近々クラウドへ移行したいと考えているとします。
 
-（準備中：現場状況とアプリケーションの機能がある程度わかる具体例を追記予定）
+このサンプルでは、そのような課題を解決すべく、後述する機能を持った ASP.NET アプリケーションを Microsoft Azure の PaaS 環境で実行する ASP.NET Core アプリケーションに移行する手順を解説します。
+
+## 解析手順
+[「KOSMISCH Monolith を使ってアプリケーションを解析する」](./docs/analyze-application-by-kosmisch-monolith.md)
 
 ## 移行手順
-（準備中：別ドキュメントのリンクか、実際の内容を記載予定）
-
-## 解析結果の読み方
-（準備中：本アプリケーションをKOSMISCHで解析することにより明らかになる課題とその解決方法を記載予定）
+[「ASP.NET アプリケーションを ASP.NET Core アプリケーションに移行する」](./docs/migrate-aspnet-to-aspnetcore.md)
