@@ -11,3 +11,28 @@
 
 ## 移行手順
 [「ASP.NET アプリケーションを ASP.NET Core アプリケーションに移行する」](./docs/migrate-aspnet-to-aspnetcore.md)
+
+## 実施環境
+本サンプルは下記のツールやアカウントを用意した上で実施することを推奨します。
+
+### Visual Studio Code
+https://code.visualstudio.com/
+
+### .NET Core 2.1 SDK
+https://dotnet.microsoft.com/download/dotnet-core/2.1
+
+### Docker
+Windows https://docs.docker.com/docker-for-windows/
+Mac https://docs.docker.com/docker-for-mac/
+
+### Git
+https://git-scm.com/
+
+### GitHubアカウント
+https://github.com/
+
+### SQL Server Express LocalDB
+https://docs.microsoft.com/ja-jp/sql/database-engine/configure-windows/sql-server-express-localdb?view=sql-server-ver15
+
+### Azure Storage Emulator
+https://docs.microsoft.com/ja-jp/azure/storage/common/storage-use-emulator

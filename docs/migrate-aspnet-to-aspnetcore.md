@@ -430,18 +430,19 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Controllers
         [HttpPost]
         public ActionResult SendEmailSample()
         {
-            // 各種設定値はサンプルのため、実際には動作しません
-            var client = new SmtpClient("smtp.kosmischsample.net");
-            var from = new MailAddress("from@kosmischsample.net", "Kosmisch", Encoding.UTF8);
-            var to = new MailAddress("to@kosmischsample.net");
-            var message = new MailMessage(from, to);
-            message.Body = "Test message";
-            message.BodyEncoding = Encoding.UTF8;
-            message.Subject = "Kosmisch Sample";
-            message.SubjectEncoding = Encoding.UTF8;
-            client.Send(message);
-            message.Dispose();
+            EmailHelper.Send();
+            return RedirectToAction("Index");
+        }
 
+        [HttpPost]
+        public ActionResult SaveUserDataSample()
+        {
+            // HttpContext.Server.MapPathが使えないので一旦コメントアウト
+            // 後ほど、ファイルの保存先変更時に併せて変更します
+            // var users = db.Users.ToList();
+            // var json = JsonConvert.SerializeObject(users);
+            // var path = HttpContext.Server.MapPath("~/temp/");
+            // FileHelper.WriteJson(path, json);
             return RedirectToAction("Index");
         }
 
@@ -465,12 +466,61 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Controllers
 
 ---
 
-## 11.古いアプリケーションを削除する
+## 11.ファイル操作箇所の変更
+パブリッククラウドのPaaS環境にホストするアプリケーションは、スケールアウトを想定してステートレス構成で実装することが推奨されています。  
+今回はファイルの保存先をローカルからAzure Blob Storageに変更し、サーバー内に画像を保管しないコードに変えます。
+
+```csharp
+public static class FileHelper
+{
+    public static void WriteJson(string json)
+    {
+        string connectionString = Environment.GetEnvironmentVariable("CONNECT_STR") ?? "UseDevelopmentStorage=true";
+        CloudStorageAccount.TryParse(connectionString, out var storageAccount);
+
+        var cloudBlobClient = storageAccount.CreateCloudBlobClient();
+        var containerName = Environment.GetEnvironmentVariable("BLOB_CONTAINER_NAME") ?? "mycontainer";
+        var cloudBlobContainer = cloudBlobClient.GetContainerReference(containerName);
+        cloudBlobContainer.CreateAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+        var permissions = cloudBlobContainer.GetPermissionsAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+        permissions.PublicAccess = BlobContainerPublicAccessType.Blob;
+        cloudBlobContainer.SetPermissionsAsync(permissions).ConfigureAwait(false).GetAwaiter().GetResult();
+
+        var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference($"sample-data-{DateTime.Now.ToString("yyyyMMddHHmmss")}.json");
+        cloudBlockBlob.UploadTextAsync(json).ConfigureAwait(false).GetAwaiter().GetResult();
+    }
+}
+```
+
+UsersController内の`SaveUserDataSample()`を以下の通り変更します。
+
+```csharp
+[HttpPost]
+public ActionResult SaveUserDataSample()
+{
+    var users = db.Users.ToList();
+    var json = JsonConvert.SerializeObject(users);
+    FileHelper.WriteJson(json);
+    return RedirectToAction("Index");
+}
+```
+
+---
+
+## 12.メール送信処理の変更
+
+```csharp
+//TODO
+```
+
+---
+
+## 13.古いアプリケーションを削除する
 `Kosmisch.Sample.OnPremisesAspnetApp.Net47`ディレクトリを削除しましょう。
 
 ---
 
-## 12.修正内容をリポジトリに反映する
+## 14.修正内容をリポジトリに反映する
 ASP.NETで実装していたアプリケーションを ASP.NET Coreに移行することができました。  
 リポジトリディレクトリにて下記のコマンドを入力して、ここまでの変更をリポジトリに反映しましょう。
 
@@ -482,7 +532,7 @@ git push origin master
 
 ---
 
-## 13.KOSMISCH Monolithで再度解析を行う
+## 15.KOSMISCH Monolithで再度解析を行う
 [「#2 KOSMISCH Monolith を使ってアプリケーションを解析する」](./analyze-application-by-kosmisch-monolith.md)と同じ手順で、KOSMISCH Monolithを使用して ASP.NET Coreのソースコードを再度解析しましょう。  
 - [KOSMISCH Monolith](https://monolith.kosmisch.tech)にログインする
 - 自身のGitHubリポジトリを指定して解析を開始する
