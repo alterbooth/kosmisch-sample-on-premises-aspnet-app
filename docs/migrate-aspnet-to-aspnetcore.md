@@ -539,6 +539,8 @@ public ActionResult SaveUserDataSample()
 ---
 
 ## 12.メール送信処理の変更
+クラウドサービスでは、IaaSなどから直接メールを送信することが制限されており、自身で構築したMTAでメールを送信することは出来ません。  
+そのため、メールを送信する場合には専用のSaaSを利用してメールを送信することが推奨されています。  
 今回は[SendGrid](https://sendgrid.kke.co.jp/)を用いたメール送信を行うコードに変更します。
 
 ```csharp
