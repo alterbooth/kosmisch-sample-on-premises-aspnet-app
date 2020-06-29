@@ -191,7 +191,28 @@ Entity Framework Coreの形式に沿ったModelに移行するため、下記の
 
 ---
 
-### 6.データベースの接続定義を修正する
+## 6.データベースの接続定義を移行する
+`Kosmisch.Sample.OnPremisesAspnetApp/appsettings.Development.json`を下記のように変更します。（ここで追記するのは開発環境におけるローカルDBへの接続設定です）
+
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "System": "Information",
+      "Microsoft": "Information"
+    }
+  },
+  "ConnectionStrings": {
+    "DatabaseConnectionString": "Data Source=(localdb)\\MSSQLLocalDB; Initial Catalog=kosmisch-sample-on-premises-core; Integrated Security=True; MultipleActiveResultSets=True;"
+  }
+}
+```
+
+---
+
+## 7.DbContextを移行し、DBマイグレーションを行う
+### 7-1.MyContextを移行する
 `Kosmisch.Sample.OnPremisesAspnetApp/Data/MyContext.cs`を下記のように変更します。
 
 ```csharp
@@ -210,9 +231,7 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Data
 }
 ```
 
----
-
-### 7.スタートアップに登録する
+### 7-2.スタートアップに登録する
 ASP.NETのアプリケーションでO/Rマッパーに[Entity Framework](https://docs.microsoft.com/ja-jp/ef/ef6/)を使用している場合、[Entity Framework Core](https://docs.microsoft.com/ja-jp/ef/core/)に移行することが推奨されています。
 
 `Kosmisch.Sample.OnPremisesAspnetApp/Startup.cs`の冒頭に下記のコードを追加します。
@@ -228,6 +247,18 @@ using Kosmisch.Sample.OnPremisesAspnetApp.Models;
 services.AddDbContext<MyContext>(options =>
     options.UseSqlServer(Configuration.GetConnectionString("DatabaseConnectionString")));
 ```
+
+### 7-3.マイグレーションコマンドを実行する
+Entity Framework Core へ移行したので、改めてマイグレーションコマンドを実行します。
+
+```
+dotnet tool install --global dotnet-ef
+dotnet add package Microsoft.EntityFrameworkCore.Design
+dotnet ef migrations add Initial
+dotnet ef database update
+```
+
+コマンド実行後、LocalDBに`kosmisch-sample-on-premises-core`が作成されます。
 
 ---
 
