@@ -499,18 +499,18 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Controllers
 
 ## 11.ファイル操作箇所の変更
 パブリッククラウドのPaaS環境にホストするアプリケーションは、スケールアウトを想定してステートレス構成で実装することが推奨されています。  
-今回はファイルの保存先をローカルからAzure Blob Storageに変更し、サーバー内に画像を保管しないコードに変えます。
+今回はファイルの保存先をローカルからAzure Blob Storageに変更し、サーバー内に画像を保管しないコードに変更します。
 
 ```csharp
 public static class FileHelper
 {
     public static void WriteJson(string json)
     {
-        string connectionString = Environment.GetEnvironmentVariable("CONNECT_STR") ?? "UseDevelopmentStorage=true";
+        var connectionString = Environment.GetEnvironmentVariable("StorageConnectionString") ?? "UseDevelopmentStorage=true";
         CloudStorageAccount.TryParse(connectionString, out var storageAccount);
 
         var cloudBlobClient = storageAccount.CreateCloudBlobClient();
-        var containerName = Environment.GetEnvironmentVariable("BLOB_CONTAINER_NAME") ?? "mycontainer";
+        var containerName = Environment.GetEnvironmentVariable("BlobContainerName") ?? "mycontainer";
         var cloudBlobContainer = cloudBlobClient.GetContainerReference(containerName);
         cloudBlobContainer.CreateAsync().ConfigureAwait(false).GetAwaiter().GetResult();
         var permissions = cloudBlobContainer.GetPermissionsAsync().ConfigureAwait(false).GetAwaiter().GetResult();
@@ -539,9 +539,45 @@ public ActionResult SaveUserDataSample()
 ---
 
 ## 12.メール送信処理の変更
+今回は[SendGrid](https://sendgrid.kke.co.jp/)を用いたメール送信を行うコードに変更します。
 
 ```csharp
-//TODO
+using SendGrid;
+using SendGrid.Helpers.Mail;
+using System;
+
+namespace Kosmisch.Sample.OnPremisesAspnetApp.Helpers
+{
+    /// <summary>
+    /// メール送信用ヘルパークラス
+    /// </summary>
+    public static class EmailHelper
+    {
+        /// <summary>
+        /// メールを送信する
+        /// </summary>
+        /// <param name="body">bodyテキスト</param>
+        public static void Send(string body)
+        {
+            var from = new EmailAddress()
+            {
+                Name = "Kosmisch",
+                Email = "from@kosmischsample.net"
+            };
+            var to = new EmailAddress()
+            {
+                Name = "Test",
+                Email = "to@kosmischsample.net"
+            };
+            var subject = "Kosmisch Sample";
+            var message = MailHelper.CreateSingleEmail(from, to, subject, body, body);
+
+            var apiKey = Environment.GetEnvironmentVariable("SendGridApiKey");
+            var client = new SendGridClient(apiKey);
+            var response = client.SendEmailAsync(message).ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+    }
+}
 ```
 
 ---
