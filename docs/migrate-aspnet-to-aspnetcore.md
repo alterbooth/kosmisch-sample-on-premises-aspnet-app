@@ -1,5 +1,5 @@
 # ASP.NET アプリケーションを ASP.NET Core アプリケーションに移行する
-KOSMISCH Monolithを使用して、既存のASP.NETアプリケーションの問題点を整理しました。  
+[「KOSMISCH Monolith を使ってアプリケーションを解析する」](./docs/analyze-application-by-kosmisch-monolith.md)では、KOSMISCH Monolithを使用して既存のASP.NETアプリケーションの問題点を整理しました。  
 続いては実際に **ASP.NET** から **ASP.NET Core** に移行する作業を行いましょう。
 
 ## ASP.NET Coreとは
