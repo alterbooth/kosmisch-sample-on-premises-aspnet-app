@@ -47,7 +47,7 @@
 
 ![run-monolith](./img/run-monolith.png)
 
-※GitHubのリポジトリページに記載されています。  
+※GitHubのリポジトリページのコミット一覧（`github.com/ユーザー名/リポジトリ名/commits`）から確認できます。  
 ![copy-commit-id](./img/copy-commit-id.png)
 
 ---
@@ -67,7 +67,7 @@
 
 また各項目について解析対象のファイル情報や行番号を表示し、推奨される対応内容も併せて表示されます。
 
-![monolith-report-sample](./img/monolith-report-sample.png)
+![monolith-report-global](./img/monolith-report-global.png)
 
 ---
 
