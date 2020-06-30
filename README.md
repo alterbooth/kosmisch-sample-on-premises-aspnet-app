@@ -19,6 +19,9 @@
 ## 移行手順
 [「ASP.NET アプリケーションを ASP.NET Core アプリケーションに移行する」](./docs/migrate-aspnet-to-aspnetcore.md)
 
+## Azureにデプロイする際の参考資料
+[「ASP.NET Core アプリケーションを Microsoft Azure にデプロイする際の参考資料」](./docs/deploy-to-azure.md)
+
 ## 実施環境
 本サンプルは下記のツールやアカウントを用意した上で実施することを推奨します。
 
