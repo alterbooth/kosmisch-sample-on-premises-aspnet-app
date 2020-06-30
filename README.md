@@ -6,6 +6,13 @@
 
 このサンプルでは、 ASP.NET アプリケーションを Microsoft Azure の PaaS 環境で実行する ASP.NET Core アプリケーションに移行する手順を解説し、上記のような状況でKOSMISCHがどのように利用できるかを理解します。
 
+### 対象のアプリケーションについて
+- ASP.NET MVC アプリケーション
+- ローカルDBにデータを保持
+- ログ出力フィルター
+- SMTP経由でのメール配信機能
+- 同一サーバー内ディレクトリへのファイル書き出し機能
+
 ## 解析手順
 [「KOSMISCH Monolith を使ってアプリケーションを解析する」](./docs/analyze-application-by-kosmisch-monolith.md)
 
