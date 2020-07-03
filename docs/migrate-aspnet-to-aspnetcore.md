@@ -185,9 +185,11 @@ log  : D:\tmp\kosmisch-sample-on-premises-aspnet-app\Kosmisch.Sample.OnPremisesA
 ---
 
 ## 5.モデルを移行する
-Entity Framework Coreの形式に沿ったModelに移行するため、下記のファイルを`Kosmisch.Sample.OnPremisesAspnetApp/Models`にコピーします。  
+Entity Framework Coreの形式に沿ったModelに移行するため、下記の通りファイルをコピーします。  
 - `Kosmisch.Sample.OnPremisesAspnetApp.Net47/Data/MyContext.cs`
+    - `Kosmisch.Sample.OnPremisesAspnetApp/Data` フォルダを作成しコピー
 - `Kosmisch.Sample.OnPremisesAspnetApp.Net47/Models/User.cs`
+    - `Kosmisch.Sample.OnPremisesAspnetApp/Models`にコピー
 
 ---
 
@@ -237,8 +239,8 @@ ASP.NETのアプリケーションでO/Rマッパーに[Entity Framework](https:
 `Kosmisch.Sample.OnPremisesAspnetApp/Startup.cs`の冒頭に下記のコードを追加します。
 
 ```csharp
+using Kosmisch.Sample.OnPremisesAspnetApp.Data;
 using Microsoft.EntityFrameworkCore;
-using Kosmisch.Sample.OnPremisesAspnetApp.Models;
 ```
 
 `Kosmisch.Sample.OnPremisesAspnetApp/Startup.cs`の`ConfigureServices`メソッドに下記のコードを追加します。
