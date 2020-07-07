@@ -255,7 +255,6 @@ Entity Framework Core へ移行したので、改めてマイグレーション�
 
 ```
 dotnet tool install --global dotnet-ef
-dotnet add package Microsoft.EntityFrameworkCore.Design
 dotnet ef migrations add Initial
 dotnet ef database update
 ```
@@ -342,6 +341,7 @@ app.UseMvc(routes =>
 
 ```csharp
 using Kosmisch.Sample.OnPremisesAspnetApp.Data;
+using Kosmisch.Sample.OnPremisesAspnetApp.Helpers;
 using Kosmisch.Sample.OnPremisesAspnetApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -495,7 +495,14 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Controllers
 
 ## 10.ビューの移行
 次にページのUIを定義するビューの移行を行います。  
-`Kosmisch.Sample.OnPremisesAspnetApp.Net47/Views/Users`をコピーして`Kosmisch.Sample.OnPremisesAspnetApp/Views`に貼り付けます。`Create.cshtml`と`Edit.cshtml`について、`@section Scripts`部分を削除します。
+`Kosmisch.Sample.OnPremisesAspnetApp.Net47/Views/Users`をコピーして`Kosmisch.Sample.OnPremisesAspnetApp/Views`に貼り付けます。`Create.cshtml`と`Edit.cshtml`について、`@section Scripts`部分を削除します。  
+以下、削除対象の箇所です。
+
+```
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+```
 
 ---
 
