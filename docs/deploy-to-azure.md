@@ -1,4 +1,7 @@
 # ASP.NET Core アプリケーションを Microsoft Azure にデプロイする際の参考資料
+## 移行後のアーキテクチャ図
+![architecture](./img/architecture.png)
+
 ## Azure SQL Database
 ### リソース作成に関するドキュメント
 https://docs.microsoft.com/ja-jp/azure/azure-sql/database/single-database-create-quickstart?tabs=azure-portal
