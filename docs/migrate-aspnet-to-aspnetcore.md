@@ -329,6 +329,7 @@ app.UseMvc(routes =>
 ## 9.コントローラーの移行
 次にコントローラーの移行を行います。  
 `Kosmisch.Sample.OnPremisesAspnetApp.Net47/Controllers/UsersController.cs`を`Kosmisch.Sample.OnPremisesAspnetApp/Controllers`にコピーして、変更を行います。  
+（併せて`Kosmisch.Sample.OnPremisesAspnetApp.Net47/Helpers`を`Kosmisch.Sample.OnPremisesAspnetApp/Helpers`にコピーしてください。こちらの修正内容は後述します。）  
 主な変更ポイントは以下の通りです。
 - usingから`System.Web.Mvc`と`System.Data.Entity`を削除
 - usingに`Microsoft.AspNetCore.Mvc`と`Microsoft.EntityFrameworkCore`を追加
@@ -347,8 +348,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
-using System.Net.Mail;
-using System.Text;
 
 namespace Kosmisch.Sample.OnPremisesAspnetApp.Controllers
 {
@@ -508,26 +507,40 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Controllers
 
 ## 11.ファイル操作箇所の変更
 パブリッククラウドのPaaS環境にホストするアプリケーションは、スケールアウトを想定してステートレス構成で実装することが推奨されています。  
-今回はファイルの保存先をローカルからAzure Blob Storageに変更し、サーバー内に画像を保管しないコードに変更します。
+今回はファイルの保存先をローカルからAzure Blob Storageに変更し、サーバー内に画像を保管しないコードに変更します。  
+下記のコマンドでプロジェクトに必要なライブラリをインストールします。
+
+```
+dotnet add package WindowsAzure.Storage --version 9.3.3
+```
+
+`Kosmisch.Sample.OnPremisesAspnetApp/Helpers/FilterHelper.cs`を以下の通り変更します。
 
 ```csharp
-public static class FileHelper
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+using System;
+
+namespace Kosmisch.Sample.OnPremisesAspnetApp.Helpers
 {
-    public static void WriteJson(string json)
+    public static class FileHelper
     {
-        var connectionString = Environment.GetEnvironmentVariable("StorageConnectionString") ?? "UseDevelopmentStorage=true";
-        CloudStorageAccount.TryParse(connectionString, out var storageAccount);
+        public static void WriteJson(string json)
+        {
+            var connectionString = Environment.GetEnvironmentVariable("StorageConnectionString") ?? "UseDevelopmentStorage=true";
+            CloudStorageAccount.TryParse(connectionString, out var storageAccount);
 
-        var cloudBlobClient = storageAccount.CreateCloudBlobClient();
-        var containerName = Environment.GetEnvironmentVariable("BlobContainerName") ?? "mycontainer";
-        var cloudBlobContainer = cloudBlobClient.GetContainerReference(containerName);
-        cloudBlobContainer.CreateAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-        var permissions = cloudBlobContainer.GetPermissionsAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-        permissions.PublicAccess = BlobContainerPublicAccessType.Blob;
-        cloudBlobContainer.SetPermissionsAsync(permissions).ConfigureAwait(false).GetAwaiter().GetResult();
+            var cloudBlobClient = storageAccount.CreateCloudBlobClient();
+            var containerName = Environment.GetEnvironmentVariable("BlobContainerName") ?? "mycontainer";
+            var cloudBlobContainer = cloudBlobClient.GetContainerReference(containerName);
+            cloudBlobContainer.CreateAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+            var permissions = cloudBlobContainer.GetPermissionsAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+            permissions.PublicAccess = BlobContainerPublicAccessType.Blob;
+            cloudBlobContainer.SetPermissionsAsync(permissions).ConfigureAwait(false).GetAwaiter().GetResult();
 
-        var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference($"sample-data-{DateTime.Now.ToString("yyyyMMddHHmmss")}.json");
-        cloudBlockBlob.UploadTextAsync(json).ConfigureAwait(false).GetAwaiter().GetResult();
+            var cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference($"sample-data-{DateTime.Now.ToString("yyyyMMddHHmmss")}.json");
+            cloudBlockBlob.UploadTextAsync(json).ConfigureAwait(false).GetAwaiter().GetResult();
+        }
     }
 }
 ```
@@ -550,7 +563,14 @@ public ActionResult SaveUserDataSample()
 ## 12.メール送信処理の変更
 クラウドサービスでは、IaaSなどから直接メールを送信することが制限されており、自身で構築したMTAでメールを送信することは出来ません。  
 そのため、メールを送信する場合には専用のSaaSを利用してメールを送信することが推奨されています。  
-今回は[SendGrid](https://sendgrid.kke.co.jp/)を用いたメール送信を行うコードに変更します。
+今回は[SendGrid](https://sendgrid.kke.co.jp/)を用いたメール送信を行うコードに変更します。  
+下記のコマンドでプロジェクトに必要なライブラリをインストールします。
+
+```
+dotnet add package SendGrid --version 9.18.0
+```
+
+`Kosmisch.Sample.OnPremisesAspnetApp/Helpers/EmailHelper.cs`を以下の通り変更します。
 
 ```csharp
 using SendGrid;
@@ -559,16 +579,9 @@ using System;
 
 namespace Kosmisch.Sample.OnPremisesAspnetApp.Helpers
 {
-    /// <summary>
-    /// メール送信用ヘルパークラス
-    /// </summary>
     public static class EmailHelper
     {
-        /// <summary>
-        /// メールを送信する
-        /// </summary>
-        /// <param name="body">bodyテキスト</param>
-        public static void Send(string body)
+        public static void Send()
         {
             var from = new EmailAddress()
             {
@@ -581,6 +594,7 @@ namespace Kosmisch.Sample.OnPremisesAspnetApp.Helpers
                 Email = "to@kosmischsample.net"
             };
             var subject = "Kosmisch Sample";
+            var body = "Test message";
             var message = MailHelper.CreateSingleEmail(from, to, subject, body, body);
 
             var apiKey = Environment.GetEnvironmentVariable("SendGridApiKey");
